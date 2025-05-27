@@ -1,0 +1,9 @@
+services:
+  app:
+    image: jenkins/jenkins
+    restart: on-failure
+    ports:
+      - 9090:8080
+      - 50000:50000
+    volumes:
+      - /home/kunal/Desktop/jenkins:/var/jenkins_home/
