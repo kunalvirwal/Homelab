@@ -1,3 +1,7 @@
+
+# This docker compose is to setup an instance of nextcloud
+# The folder nextcloud being mounted to /var/www/html must have owner and group www-data
+
 services:
   app:
     image: nextcloud

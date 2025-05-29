@@ -1,0 +1,53 @@
+
+# This compose is a combined compose for the complete monitoring setup of prometheus, grafana, node-exporter and cadvisor
+# The ./grafana folder must belong to user grafana with UID and GID 472
+# The ./prometheus-data folder must belong to user nobody with UID and GID 65534
+# The ./prometheus-dev folder should have a prometheus.yml file which is also provided in this repo
+
+version: '1'
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - 7070:9090
+    volumes:
+      - ./prometheus-dev:/etc/prometheus
+      - ./prometheus-data:/prometheus
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - 3030:3000
+    volumes:
+      - ./grafana:/var/lib/grafana
+
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    container_name: node_exporter
+    restart: unless-stopped
+    pid: host
+    command:
+      - '--path.rootfs=/host'
+    volumes:
+      - '/:/host:ro,rslave'
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    restart: unless-stopped
+    devices:
+      - /dev/kmsg
+    ports:
+      - 5050:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
