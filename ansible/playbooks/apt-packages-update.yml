@@ -1,0 +1,10 @@
+
+# This playbook is used to update all linux packages of the hosts present in group linux.
+
+- hosts: "linux"
+  become: yes  # sudoer
+  tasks:
+    - name: Upgrading Packages  # task name any
+      apt:  # used module name
+        update_cache: yes  # apt-get update
+        upgrade: yes  # apt-get upgrade

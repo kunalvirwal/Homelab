@@ -1,0 +1,23 @@
+
+# Note for running this you should have `artis3n.tailscale` role installed.
+# To install this role `ansible-galaxy install artis3n.tailscale`.
+
+# Note: 1. The servers on which you are trying to run this ansible must have openssh-server
+#          installed and sshd running with a password or key based auth setup.
+#       2. The variable names set at the play level and in the role should have differenet
+#          namesotherwise the role variables will recursively self reference and error out.
+#       3. This ansible will only run for systemd based instances and not for docker containers
+#          where systemd is not running with PID-1.
+
+
+- name: Install and configure Tailscale and make the nodes a part of a Tailnet
+  hosts: Tailnet
+  become: true
+  vars:
+    tailscale_args: "--accept-dns=true"  # not compulsory can be left empty
+    tailscale_auth_key: "tskey-auth-XXXX-YYYY"
+  roles:
+    - role: artis3n.tailscale
+      vars:
+        tailscale_authkey: "{{ tailscale_auth_key }}"
+        tailscale_host_args: "{{ tailscale_args }}"
