@@ -1,6 +1,7 @@
 
 # This is the configuration file for prometheus, that has to be mounted in /etc/prometheus
-# It picks up metrics from node-exporter, cadvisor and prometheus itself
+# It picks up metrics from node-exporter, cadvisor, prometheus itself and a K3s cluster accessible using tailscale
+# If you are not scraping K3s metrics from a Tailscale node, then you can ignore the K3s section
 
 global:
   scrape_interval: 15s

@@ -1,0 +1,156 @@
+# These commands are to be used after you have booted into a usb pendrive with archiso
+
+
+loadkeys us
+setfont ter-128b
+
+iwctl
+#iwd shell
+        station wlan0 scan
+        station wlan0 get-networks
+        station wlan0 connect <wifiname>
+        <password>
+        exit
+#iwd shell end
+
+timedatectl set-local-rtc 1
+
+cfdisk /dev/nvme0n1   #or whatever ssd or hdd u want to install into
+# About 800M to 1G for EFI system partition
+# About 4G for linux Swap
+# Rest for linux file system
+# Dont use cfdisk for setting up types, do it manually.
+# Go to write, type yes and then quit
+# Can check partitions using lsblk
+
+
+mkfs.ext4 /dev/<fileSystemPartition>   #formats and sets the file system partition
+# Dont format efi partition if it already exists
+mkfs.fat -F 32 /dev/<EFIsystemPartition>    #formats and sets the EFI system partition
+
+mkswap /dev/<swapPartition>     #formats and sets the swap partition
+
+mount /dev/<rootPartition> /mnt
+mount --mkdir  /dev/<EFIsystemPartition> /mnt/boot
+swapon /dev/<SwapPartition>
+
+pacstrap -K /mnt base linux linux-lts linux-firmware linux-headers linux-lts-headers sof-firmware base-devel grub efibootmgr nano vim neovim networkmanager nvidia nvidia-lts neofetch htop bluez blueman bluez-utils
+
+genfstab /mnt > /mnt/etc/fstab  #generates a filesystem table
+
+arch-chroot /mnt
+
+ln -sf /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
+# Can check time via date command
+hwclock --systohc
+
+# Now go to /etc/locale.gen and uncomment en_US.UTF-8 UTF-8 after that run
+locale-gen
+
+# Now edit the file using nano /etc/locale.conf and add
+        LANG=en_US.UTF-8
+
+# Optionally edit the file /etc/vconsole.conf and add
+        KEYMAP=us
+
+# Enter your device hostname in /etc/hostname
+        shul
+
+passwd  # Create root password
+
+useradd -m -G wheel -s /bin/bash <username>
+
+EDITOR=nano visudo # To edit the sudoers file
+# In the sudoers file uncomment "%wheel ALL=(ALL) ALL" which allows members of the wheel group to use sudo
+
+su <username> # To change user
+
+sudo pacman -Syu # Confirm sudo
+
+exit # To run network manager come to root user
+
+systemctl enable NetworkManager
+
+systemctl enable bluetooth
+
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB    # wherever EFI partition is mounted
+
+sudo pacman -S ntfs-3g os-prober dosfstools mtools
+
+# Now edit /etc/default/grub and uncomment the last line which disables os-prober
+# You can also increase grub_timeout
+# Windows should be recognised else try rebooting windows
+grub-mkconfig -o /boot/grub/grub.cfg
+
+umount -a   # unmount all drives from bootable
+
+# reboot
+
+setfont -d
+
+#wifi
+        nmcli dev status
+        nmcli radio wifi on
+        nmcli dev wifi list
+        sudo nmcli dev wifi connect <wifiName> password "<password>
+#wifi
+
+# Now add to /etc/hosts
+        127.0.0.1               localhost
+        ::1                     localhost
+        127.0.1.1               <hostname>.localdomain          <username>
+
+sudo pacman -S xorg sddm plasma-meta kde-applications dolphin konsole alacritty git kwrite libreoffice-fresh firefox cargo clang cmake make gcc gnu-free-fonts ttf-jetbrains-mono noto-fonts noto-fonts-emoji ttf-dejavu ttf-font-awesome cheese
+
+# KDE-Plasma DE GUI
+sudo systemctl enable sddm
+sudo systemctl start sddm
+
+# Run nvidia-smi to confirm nvidia drivers
+
+os-prober
+grub-mkconfig -o /boot/grub/grub.cfg
+
+sudo pacman -S pavucontrol firefox p7zip unrar tar curl wget jdk-openjdk exfat-utils fuse-exfat flac jasper aria2  # jdk-openjdk is for java installation and is usefull sometimes
+
+# Tinker with pavucontrol/pulse-audio to get microphone and speaker working
+
+# Installing AUR helper yay
+        mkdir Programs
+        cd Programs
+        git clone https://aur.archlinux.org/yay-bin.git
+        cd yay-bin
+        makepkg -si
+
+# Pacman conf # edit /etc/pacman.conf and uncomment these lines
+        color
+        ParallelDownloads = 5
+        [multilib]
+        Include = /etc/pacman.d/mirrorlist
+
+sudo pacman -Sy ldns # Allows only secure dns
+
+# Get fastest mirrorlist
+        sudo pacman -S reflector
+        sudo cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
+        sudo reflector --verbose --latest 10 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+
+
+yay -S brave visual-studio-code-bin timeshift preload
+sudo pacman -Syu spotify-launcher ufw lib32-nvidia-utils xf86-video-intel
+
+sudo systemctl enable ufw
+#sudo ufw deny 22/tcp # Use if you want to deny ssh server requests
+
+sudo systemctl enable preload && sudo systemctl start preload
+
+# to improve battery usage install auto-cpufreq
+        cd Programs
+        git clone https://github.com/AdnanHodzic/auto-cpufreq.git
+        cd auto-cpufreq/
+        sudo ./auto-cpufreq-installer
+        auto-cpufreq --help
+        sudo auto-cpufreq --install
+        sudo auto-cpufreq --stats
+
+# Also tinker with timeshift
