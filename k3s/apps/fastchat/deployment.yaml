@@ -1,0 +1,32 @@
+## fastchat deployment
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastchat
+  namespace: apps
+  labels:
+    source: self-project
+    app: fastchat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastchat
+  template:
+    metadata:
+      labels:
+        app: fastchat
+    spec:
+      containers:
+        - name: fastchat
+          image: docker.io/kunalvirwal/fastchat:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: PORT
+              value: "80"
+            - name: SECRET_KEY
+              value: "secret"
+            - name: MONGODB_URI
+              value: "mongodb+srv://user:password@mongodburl"

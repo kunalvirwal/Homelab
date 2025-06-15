@@ -1,0 +1,14 @@
+## fastchat service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-fastchat
+  namespace: apps
+spec:
+  selector:
+    app: fastchat
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80 # defaults to port
