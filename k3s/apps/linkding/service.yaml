@@ -1,0 +1,15 @@
+## linkding service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-linkding
+  namespace: apps
+spec:
+  selector:
+    app: linkding
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9090
+  type: ClusterIP  # default

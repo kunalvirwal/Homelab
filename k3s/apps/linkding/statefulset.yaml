@@ -1,0 +1,46 @@
+## linkding deployment (can also use a stateful set)
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: linkding
+  namespace: apps
+  labels:
+    source: community
+    app: linkding
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: linkding
+  template:
+    metadata:
+      labels:
+        app: linkding
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: dexy
+      containers:
+      - name: linkding
+        image: sissbruecker/linkding:latest
+        ports:
+        - containerPort: 9090
+        env:
+          - name: LD_DISABLE_URL_VALIDATION
+            value: "True"
+          - name: LD_SUPERUSER_NAME
+            value: "superuser_name"
+          - name: LD_SUPERUSER_PASSWORD
+            value: "superuser_password"
+        volumeMounts:
+          - name: linkding-data
+            mountPath: /etc/linkding/data   # where the data is stored in the pod
+  volumeClaimTemplates:
+    - metadata:
+        name: linkding-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: local-path
+        resources:
+          requests:
+            storage: 2Gi
