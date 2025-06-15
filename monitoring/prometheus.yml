@@ -19,3 +19,46 @@ scrape_configs:
   - job_name: "cadvisor"
     static_configs:
       - targets: ["cadvisor:8080"]
+
+# k3s
+
+  - job_name: "kube-apiserver"
+    scheme: https
+    tls_config:
+      ca_file: /etc/prometheus/ca.crt
+    bearer_token_file: /etc/prometheus/kube-sa-token
+    static_configs:
+      - targets: ["<MasterNode>:6443"] # masternode IP:6443
+
+  - job_name: "kube-cadvisor"  # internal cadvisor managed by kubelets
+    scheme: https
+    metrics_path: /metrics/cadvisor
+    tls_config:
+      ca_file: /etc/prometheus/ca.crt
+    bearer_token_file: /etc/prometheus/kube-sa-token
+    static_configs:
+      - targets: ["<WorkerNodes>:10250",] # all worker nodes running kubelet in the cluster, kubelet exposes metrics on port 10250.
+
+  - job_name: "kube-scheduler"
+    scheme: https
+    metrics_path: /metrics
+    tls_config:
+      ca_file: /etc/prometheus/ca.crt
+    bearer_token_file: /etc/prometheus/kube-sa-token
+    static_configs:
+      - targets: ["<MasterNode>:10259"] # Master nodes run kube-scheduler which exposes its metrics on port 10259.
+
+  - job_name: "kube-controller-manager"
+    scheme: https
+    metrics_path: /metrics
+    tls_config:
+      ca_file: /etc/prometheus/ca.crt
+    bearer_token_file: /etc/prometheus/kube-sa-token
+    static_configs:
+      - targets: ["<MasterNode>:10257"] # Master nods run the kube-controller-manager and expose their metrics on port 10257.
+
+  - job_name: "etcd"
+    scheme: http   # etcd metrics are usually served over HTTP on port 2381
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["<MasterNode>:2381"] # Master nodes run embedded etcd and their metrics are exposed on port 2381.

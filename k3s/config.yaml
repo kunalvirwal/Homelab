@@ -1,0 +1,21 @@
+# This config file is present in /etc/rancher/k3s/
+# It defines the configs with which the cluster should run with.
+# If any change is done in this config then the k3s service must be restarted.
+
+kube-controller-manager-arg:
+  - "bind-address=0.0.0.0"
+kube-scheduler-arg:
+  - "bind-address=0.0.0.0"
+tls-san:
+  - "localhost"
+  - "127.0.0.1"
+  - "<Node-TailnetIP>"
+  - "<Node-Tailnet-Hostname>"
+etcd-expose-metrics: true
+# etcd logs are exported over http on port 2381
+etcd-arg:
+  - "listen-metrics-urls=http://127.0.0.1:2381,http://Node-TailnetIP:2381"   # for metrics
+node-ip: <Node-TailnetIP>
+node-external-ip: <Node-TailnetIP>
+advertise-address: <Node-TailnetIP>
+flannel-iface: tailscale0

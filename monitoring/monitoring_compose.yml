@@ -1,20 +1,43 @@
-
-# This compose is a combined compose for the complete monitoring setup of prometheus, grafana, node-exporter and cadvisor
+# This compose is a combined compose for the complete monitoring setup of prometheus, grafana, node-exporter and cadvisor and tailscale-sidecar if needed
 # The ./grafana folder must belong to user grafana with UID and GID 472
 # The ./prometheus-data folder must belong to user nobody with UID and GID 65534
 # The ./prometheus-dev folder should have a prometheus.yml file which is also provided in this repo
 
-version: '1'
+version: "2.1"
 
 services:
+  # This container should only be used if you want to scrape metrics from your tailscale nodes
+  prometheus-sidecar:
+    image: tailscale/tailscale:latest
+    hostname: prometheus-sidecar
+    environment:
+      - TS_AUTHKEY=tskey-client-notAReal-OAuthClientSecret1Atawk
+      - "TS_EXTRA_ARGS=--advertise-tags=tag:prometheus --reset"  # for an OAuth token the joining container will be by default epimeral and have key expiry disabled.
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+    volumes:
+      - ./prometheus-sidecar/config:/config
+      - ./prometheus-sidecar/state:/var/lib/tailscale
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - net_admin
+      - sys_module
+    restart: always
+
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
-    restart: unless-stopped
+    restart: always
+    network_mode: service:prometheus-sidecar   # use network_mode and depends_on field only if using a tailscale sidecar containers
+    depends_on:
+      prometheus-sidecar:
+        condition: service_started
+        restart: true   # ensures prometheus restarts when side car restarts
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
-    ports:
-      - 7070:9090
+#    ports:          # use this only if not using for scraping tailscale nodes with sidecar container
+#      - 7070:9090
+
     volumes:
       - ./prometheus-dev:/etc/prometheus
       - ./prometheus-data:/prometheus

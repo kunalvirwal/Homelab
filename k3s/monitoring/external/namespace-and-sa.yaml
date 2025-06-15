@@ -1,0 +1,17 @@
+# This namespace is created for all monitoring related components.
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+
+---
+
+# This service account is for external prometheus server to scrape k3s metrics.
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prom-ext-api-user
+  namespace: monitoring
+
