@@ -1,0 +1,17 @@
+## homarr service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-homarr
+  namespace: apps
+  labels:
+    app: homarr
+spec:
+  selector:
+    app: homarr
+  ports:
+    - port: 7575
+      targetPort: 7575
+      protocol: TCP
+      name: http

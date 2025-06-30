@@ -1,0 +1,23 @@
+## homarr ingress
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ing-homarr
+  namespace: apps
+  labels:
+    app: homarr
+  annotations:
+    ingressClassName: traefik
+spec:
+  rules:
+    - host: home.kunalvirwal.tech
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: svc-homarr
+                port:
+                  number: 7575

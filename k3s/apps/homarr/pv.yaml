@@ -1,0 +1,26 @@
+##  homarr persistent volume
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-homarr
+  labels:
+    app: homarr
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-path
+  hostPath:
+    path: /home/kunal/Desktop/homarr
+    type: DirectoryOrCreate
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - dexy

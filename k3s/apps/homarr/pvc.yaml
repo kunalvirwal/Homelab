@@ -1,0 +1,17 @@
+##  homarr persistent volume claim
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-homarr
+  namespace: apps
+  labels:
+    app: homarr
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 2Gi
+  volumeName: pv-homarr
