@@ -1,5 +1,7 @@
 # K3s Setup
 
+Note: It is recommended to use the config.yaml files provided to set startup instructions for K3s instead of using inline flags. 
+
 ## Setting up first node (k3s-server and k3s-agent)
 
 - `--tls-san` flag adds the provided IPs and DNS names into the tls certificate that is
@@ -28,7 +30,7 @@ the `--server` flag to define the master API.
 - NOTE: High Availability can only be achived when more than half of the instances of `etcd` are up. Thus atleast 3 nodes are required to have a HA and it will work as long as 2 nodes are up.
 
 ```
-curl -sfL https://get.k3s.io | sh -s \
+curl -sfL https://get.k3s.io | sh -s - agent\
  --token=<token> \
  --server https://master-Node-IP:6443
 ```

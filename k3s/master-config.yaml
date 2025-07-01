@@ -11,8 +11,8 @@ tls-san:
   - "127.0.0.1"
   - "<Node-TailnetIP>"
   - "<Node-Tailnet-Hostname>"
-etcd-expose-metrics: true
-# etcd logs are exported over http on port 2381
+cluster-init: true
+etcd-expose-metrics: true    # etcd logs are exported over http on port 2381
 etcd-arg:
   - "listen-metrics-urls=http://127.0.0.1:2381,http://Node-TailnetIP:2381"   # for metrics
 node-ip: <Node-TailnetIP>

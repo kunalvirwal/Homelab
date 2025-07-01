@@ -1,0 +1,10 @@
+# This config file is present in /etc/rancher/k3s/
+# It defines the configs with which the cluster should run with.
+# If any change is done in this config then the k3s service must be restarted.
+# The token can be found on any master node in the cluster in `/var/lib/rancher/k3s/server/node-token`
+
+server: "https://<MasterNode-TailnetIP:6443"
+token: "<Cluster-Join-Token>"    # Replace from the contents of /var/lib/rancher/k3s/server/node-token from your master node
+node-ip: <Node-TailnetIP>
+node-external-ip: <Node-TailnetIP>
+flannel-iface: tailscale0
