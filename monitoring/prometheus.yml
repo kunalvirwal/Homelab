@@ -2,6 +2,7 @@
 # This is the configuration file for prometheus, that has to be mounted in /etc/prometheus
 # It picks up metrics from node-exporter, cadvisor, prometheus itself and a K3s cluster accessible using tailscale
 # If you are not scraping K3s metrics from a Tailscale node, then you can ignore the K3s section
+# Here WorkerNode refers to the node's IP in Tailnet or in Private LAN  
 
 global:
   scrape_interval: 15s
@@ -9,17 +10,27 @@ global:
   evaluation_interval: 15s
 
 scrape_configs:
-  - job_name: "prometheus"
+  - job_name: "prometheus"    # Docker container ran by ./monitoring_compose.yml
     static_configs:
       - targets: ["localhost:9090"]
 
-  - job_name: "node_exporter"
+  - job_name: "node_exporter"    # Docker container ran by ./monitoring_compose.yml
     static_configs:
       - targets: ["node_exporter:9100"]
+        labels:
+          node: "dexy"
+      - targets: ["<WorkerNode>:9100"]
+        labels:
+          node: "skywalker"
 
-  - job_name: "cadvisor"
+  - job_name: "cadvisor"    # Docker container ran by ./monitoring_compose.yml
     static_configs:
       - targets: ["cadvisor:8080"]
+        labels:
+          node: "dexy"
+      - targets: ["<WorkerNode>:5050"]
+        labels:
+          node: "skywalker"
 
 # k3s
 
@@ -30,8 +41,24 @@ scrape_configs:
     bearer_token_file: /etc/prometheus/kube-sa-token
     static_configs:
       - targets: ["<MasterNode>:6443"] # masternode IP:6443
+        labels:
+          node: "dexy"
 
-  - job_name: "kube-cadvisor"  # internal cadvisor managed by kubelets
+  - job_name: "kubelet"
+    scheme: https
+    metrics_path: /metrics
+    tls_config:
+      ca_file: /etc/prometheus/ca.crt
+    bearer_token_file: /etc/prometheus/kube-sa-token
+    static_configs:
+      - targets: ["<WorkerNode>:10250"] # workernode IP:10250
+        labels:
+          node: "dexy"
+      - targets: ["<WorkerNode>:10250"]
+        labels:
+          node: "skywalker"
+
+  - job_name: "kube-cadvisor"    # internal cadvisor managed by kubelets
     scheme: https
     metrics_path: /metrics/cadvisor
     tls_config:
@@ -39,27 +66,16 @@ scrape_configs:
     bearer_token_file: /etc/prometheus/kube-sa-token
     static_configs:
       - targets: ["<WorkerNodes>:10250",] # all worker nodes running kubelet in the cluster, kubelet exposes metrics on port 10250.
-
-  - job_name: "kube-scheduler"
-    scheme: https
-    metrics_path: /metrics
-    tls_config:
-      ca_file: /etc/prometheus/ca.crt
-    bearer_token_file: /etc/prometheus/kube-sa-token
-    static_configs:
-      - targets: ["<MasterNode>:10259"] # Master nodes run kube-scheduler which exposes its metrics on port 10259.
-
-  - job_name: "kube-controller-manager"
-    scheme: https
-    metrics_path: /metrics
-    tls_config:
-      ca_file: /etc/prometheus/ca.crt
-    bearer_token_file: /etc/prometheus/kube-sa-token
-    static_configs:
-      - targets: ["<MasterNode>:10257"] # Master nods run the kube-controller-manager and expose their metrics on port 10257.
+        labels:
+          node: "dexy"
+      - targets: ["<WorkerNode>:10250"]
+        labels:
+          node: "skywalker"
 
   - job_name: "etcd"
     scheme: http   # etcd metrics are usually served over HTTP on port 2381
     metrics_path: /metrics
     static_configs:
       - targets: ["<MasterNode>:2381"] # Master nodes run embedded etcd and their metrics are exposed on port 2381.
+        labels:
+          node: "dexy"
