@@ -3,7 +3,7 @@
 # The ./prometheus-data folder must belong to user nobody with UID and GID 65534
 # The ./prometheus-dev folder should have a prometheus.yml file which is also provided in this repo
 
-version: "2.1"
+# version: "2.2"
 
 services:
   # This container should only be used if you want to scrape metrics from your tailscale nodes
@@ -22,6 +22,12 @@ services:
     cap_add:
       - net_admin
       - sys_module
+    healthcheck:
+      test: ["CMD", "tailscale", "status"]
+      interval: 5s
+      timeout: 4s
+      retries: 5
+      start_period: 15s
     restart: always
 
   prometheus:
@@ -31,7 +37,7 @@ services:
     network_mode: service:prometheus-sidecar   # use network_mode and depends_on field only if using a tailscale sidecar containers
     depends_on:
       prometheus-sidecar:
-        condition: service_started
+        condition: service_healthy
         restart: true   # ensures prometheus restarts when side car restarts
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -56,6 +62,8 @@ services:
     container_name: node_exporter
     restart: unless-stopped
     pid: host
+    # ports:
+    #   - "<NodeTailnetIP>:9100:9100"    # Use when you dont want to expose the metrics publically but only on the Tailnet
     command:
       - '--path.rootfs=/host'
     volumes:
@@ -68,7 +76,8 @@ services:
     devices:
       - /dev/kmsg
     ports:
-      - 5050:8080
+      - 5050:8080    # Don't use if using Tailnet
+      # - "<NodeTailnetIP>:5050:8080"    # Use when you dont want to expose the metrics publically but only on the Tailnet
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:ro
