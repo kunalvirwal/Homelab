@@ -27,6 +27,6 @@ spec:
             - name: PORT
               value: "80"
             - name: SECRET_KEY
-              value: "secret"
+              value: "{{ .encryptedSecrets.SECRET_KEY }}"
             - name: MONGODB_URI
-              value: "mongodb+srv://user:password@mongodburl"
+              value: "{{ .encryptedSecrets.MONGODB_URI }}"

@@ -9,7 +9,7 @@ metadata:
     ingressClassName: traefik
 spec:
   rules:
-    - host: fastchat.kunalvirwal.tech
+    - host: newchat.kunalvirwal.tech
       http:
         paths:
           - path: /

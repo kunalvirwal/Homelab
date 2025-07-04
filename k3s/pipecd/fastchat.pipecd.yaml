@@ -8,5 +8,12 @@ spec:
       - ../apps/fastchat/service.yaml
       - ../apps/fastchat/ingress.yaml
     kubectlVersion: 1.32.5
+  encryption:
+    encryptedSecrets: # These secrets are key encrypted and safe to push to github for running pipecd but still it is a better practice to keep the repo private
+      SECRET_KEY: AgAkCSw0Fy4pTK20/fDmgN4MN9yLZCIiMaWtPjQxvptkqTjbzGS18lsDWDH1q/yzYt3Ntvz2qxYVrYaGWRMJZQjiEXddLXRN/Tx76QyAcxF+7Vhbg18PDc0Tk9qO4xInwslhYs7Tm3gK6eBB3vMIlFrhR7MnrHvlPLhgHAlp/b/6PPSoA4qRSDYquX8G+FhFVTknrbVj+895sohsZBosOSLR/9RzHtMs+6xDNSsl251eJGmkxrSmQMXWsiiB/Y8XpJu2uA8MiOIC5cLVBGy7bE1Xai0Pz7mI3apOFKQy2RslUFjuxCnteTP+mEnGq7Owzu5nKeZrvaHQtEAP5tfRf5QkzMLtZUX6o6BpG1fge3wSeWvCDbtiktxIWfdVB/7acZPMieVkZCrMKx/85zNiU1toXbewCGjMpgfdLoc4ObK56l2LNAiX8EJri27x0BkAowaofg8g/46QA2TwAQdQYYUxqiuBSpGIQPxhdiUuKVt1ClgnSsoe1Kc/5nMfeEd5UbPMdgLETPdYMai3ld8OQByfLD8fKLDyfp13s5LIj8hkJrkZgYI50AXMdZtTfeUOp9IetZRvZHqsz2J/QK15TjVn+Sfa2+cTHvrC/0dVwJxTUmmHK1O/YLVHFY33j/JTz93k9ayKwoipphODx8/9wBGdU6Uhnu8UG9f8TPowb0lDs3KqCtzpa/55TFx7uK+Io5cq/W6J+9KHVqU=
+      MONGODB_URI: AgCABOXBJpm/lQREyyHMO6Po6HkEGgmXBFFvUz9bxFF/5VINQQGEHIpO8I9Xytpj9oRv/EFW7JU/QZaPF8fWqYL8CSfF+lYS1UnrXVjD+aB9FXkh/4rqVX+4cYn+smzQwG/eW0C/2aQzzTu8styIbSdG5RE90QgE8ILFYnn3vY2mufha+AiVPVmrsfDg/mfV6MBOrGdgNq93vq0Nm6Qxg4hUtfT5w2YBRXEMtKO3FnYw2iScvjTZbWywzuO+r5GLy9yuDTcPxl7St3sHry2AJ4BP5v3ru9CNI9bdf/V8cf4m/Q515pk6UYpT3FydyDM/0n5skIA5GJrSIGkG6y6bz7MKTizD3t4CwAgDdU7isJFjRnun8dEPCqlupjbc1SoEgEs8s/G2JpqIeGCcrumtFIru3OJVx7EIi8KK6FUjxFijBRCvGhv5z/5gAFYp4spFR1BmpbBprAjhNW/zp5ZNB2OHY4Hrmr2rJmL81VJuruNbI8hhQ+axcbK6EG5CykM/EQUQd2bFs3X7KBZV0v4VR8FC8V7WRcnr+xK37iJoAF6QpgbpeiSlgpgHKc376LOa3pbIGAYhpkOyqsdqNlY3LOBfWKLXv/3zqVsKDm8ABu87MHsBRPq7BAOjvS7vL9K3kmq+B5hZe25AvTlD372fsOE8rqTCsEjhvCXPaqlp/Tg7vemyJGKxoJ5Fa6MY7ibZnsk/DAUGYokvd9D/eckRji0b6ruFjgn6f/1ZDuImwCwikAnmxgYFK960qoH9flHhunmbI7dao911hdyUkffY9bGorVN/+ITntF3SweWGcXMZTSNxdTwGpq8GjSBJiOLZxezG41pJ
+    decryptionTargets:
+      - ../apps/fastchat/deployment.yaml
+
   description: |
     This app is a self made chat server that uses websockets under the hood.
