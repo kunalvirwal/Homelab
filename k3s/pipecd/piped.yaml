@@ -1,0 +1,35 @@
+## piped.yaml
+
+apiVersion: pipecd.dev/v1beta1
+kind: Piped
+spec:
+  apiAddress: <ControlplaneAPI>
+  projectID: Hyperion 
+  pipedID: <Piped-ID-from-Control_Plane>
+  pipedKeyFile: /etc/piped-secret/piped-key
+  git:
+    sshKeyFile: /etc/piped-secret/ssh-key
+  secretManagement:
+    type: KEY_PAIR
+    config:
+      privateKeyFile: /etc/piped-secret/secret-private-key
+      publicKeyFile: /etc/piped-secret/secret-public-key
+  repositories:
+    - repoID: Homelab
+      remote: git@github.com:kunalvirwal/Homelab.git # Treating this repo as a source of truth for CD deployments
+      branch: master
+  syncInterval: 15s
+
+# This command just installs a Piped with the specified version.
+# Whenever you want to upgrade that Piped to a new version or update its config data
+# you have to restart it by re-running this command or use the auto updating helm.
+
+#helm upgrade -i dev-piped oci://ghcr.io/pipe-cd/chart/piped 
+#  --version=v0.52.1 \  # Piped version
+#  --namespace={NAMESPACE} \  # To install piped pod
+#  --set-file config.data={PATH_TO_PIPED_CONFIG_FILE} \  # piped.yaml
+#  --set-file secret.data.piped-key={PATH_TO_PIPED_KEY_FILE} \  # Random string
+#  --set-file secret.data.ssh-key={PATH_TO_PRIVATE_SSH_KEY_FILE} \  # Either github action key or repo specific deploy key 
+#  --set args.insecure=true \  # If control plane does not have TLS enabled
+#  --set-file secret.data.secret-public-key={PATH_TO_PUBLIC_KEY_FILE} \  # Key pair generated to encrypt secrets so that they can be safely pushed to github for deployment purposes
+#  --set-file secret.data.secret-private-key={PATH_TO_PRIVATE_KEY_FILE}
