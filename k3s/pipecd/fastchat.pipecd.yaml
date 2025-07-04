@@ -1,0 +1,12 @@
+apiVersion: pipecd.dev/v1beta1
+kind: KubernetesApp
+spec:
+  name: fastchat
+  input:
+    manifests:
+      - ../apps/fastchat/deployment.yaml
+      - ../apps/fastchat/service.yaml
+      - ../apps/fastchat/ingress.yaml
+    kubectlVersion: 1.32.5
+  description: |
+    This app is a self made chat server that uses websockets under the hood.
