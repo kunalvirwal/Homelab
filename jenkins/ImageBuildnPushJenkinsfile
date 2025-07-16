@@ -1,0 +1,19 @@
+
+// This Jenkinsfile is used to update a docker image on git push. It pushes 2 versions on each job run.
+// One image has the job no as the tag and the other is latest
+
+node {
+    def newImage
+    stage("Clone repository") {
+        checkout scm
+    }
+    stage("Build Image") {
+        newImage = docker.build("kunalvirwal/<image-name>")
+    }
+    stage("Push Image") {
+        docker.withRegistry("https://registry.hub.docker.com","dockerhub-credentials-secret") {
+            newImage.push("${env.BUILD_NUMBER}")
+            newImage.push("latest")
+        }
+    }
+}
