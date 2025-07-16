@@ -1,0 +1,26 @@
+##  linkding persistent volume
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-linkding
+  labels:
+    app: linkding
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-path
+  hostPath:
+    path: /home/kunal/Desktop/linkding
+    type: DirectoryOrCreate
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - dexy

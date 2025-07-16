@@ -33,14 +33,9 @@ spec:
           - name: LD_SUPERUSER_PASSWORD
             value: "superuser_password"
         volumeMounts:
-          - name: linkding-data
+          - name: linkding
             mountPath: /etc/linkding/data   # where the data is stored in the pod
-  volumeClaimTemplates:
-    - metadata:
-        name: linkding-data
-      spec:
-        accessModes: [ "ReadWriteOnce" ]
-        storageClassName: local-path
-        resources:
-          requests:
-            storage: 2Gi
+      volumes:
+        - name: linkding
+          persistentVolumeClaim:
+            claimName: pvc-linkding
