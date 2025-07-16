@@ -41,6 +41,8 @@ services:
         restart: true   # ensures prometheus restarts when side car restarts
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.min-block-duration=1h'
+      - '--storage.tsdb.retention.time=7d'
 #    ports:          # use this only if not using for scraping tailscale nodes with sidecar container
 #      - 7070:9090
 
