@@ -1,19 +1,31 @@
 
 // This Jenkinsfile is used to update a docker image on git push. It pushes 2 versions on each job run.
-// One image has the job no as the tag and the other is latest
+// One image has the job no as the tag and the other has the tag latest.
+// It also sends slack pings to the default slack channel 
 
 node {
     def newImage
-    stage("Clone repository") {
-        checkout scm
-    }
-    stage("Build Image") {
-        newImage = docker.build("kunalvirwal/<image-name>")
-    }
-    stage("Push Image") {
-        docker.withRegistry("https://registry.hub.docker.com","dockerhub-credentials-secret") {
-            newImage.push("${env.BUILD_NUMBER}")
-            newImage.push("latest")
+    try {
+        stage("Clone repository") {
+            checkout scm
         }
+        stage("Build Image") {
+            newImage = docker.build("dockerhub-id/image")
+        }
+        stage("Push Image") {
+            docker.withRegistry("https://registry.hub.docker.com","dockerhub-creds") {
+                newImage.push("v${env.BUILD_NUMBER}")
+                newImage.push("latest")
+            }
+        }
+        slackSend(
+            color: 'good',
+            message: "${env.JOB_NAME} #${env.BUILD_NUMBER}\nJob successfull!!: Pushed image to DockerHub. cc <@slack-id>"    // Use <> for the id to be pinged in slack
+        )
+    } catch (e) {
+        slackSend(
+            color: 'danger',
+            message: "${env.JOB_NAME} #${env.BUILD_NUMBER}\nBuild failed!? with the error: ${e} <@slack-id>"    // Use <> for the id to be pinged in slack
+        )
     }
 }
