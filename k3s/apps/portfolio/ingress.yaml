@@ -1,0 +1,24 @@
+## portfolio ingress
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ing-portfolio
+  namespace: apps
+  labels:
+    source: self-project
+    app: portfolio
+  annotations:
+    ingressClassName: traefik
+spec:
+  rules:
+    - host: kunalvirwal.tech
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: svc-portfolio
+                port:
+                  number: 80

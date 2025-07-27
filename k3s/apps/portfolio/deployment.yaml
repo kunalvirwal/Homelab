@@ -1,0 +1,29 @@
+## portfolio deployment
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portfolio
+  namespace: apps
+  labels:
+    source: self-project
+    app: portfolio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: portfolio
+  template:
+    metadata:
+      labels:
+        app: portfolio
+    spec:
+      imagePullSecrets:
+        - name: secret-dockerhub/portfolio
+      containers:
+        - name: portfolio
+          image: docker.io/kunalvirwal/portfolio:latest
+          ports:
+            - containerPort: 80
+              name: http
+              protocol: TCP

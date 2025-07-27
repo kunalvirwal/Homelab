@@ -1,0 +1,20 @@
+apiVersion: pipecd.dev/v1beta1
+kind: KubernetesApp
+spec:
+  name: portfolio
+  input:
+    manifests:
+      - ../../apps/portfolio/secret.yaml
+      - ../../apps/portfolio/deployment.yaml
+      - ../../apps/portfolio/service.yaml
+      - ../../apps/portfolio/ingress.yaml
+    kubectlVersion: 1.32.5
+  encryption:
+    encryptedSecrets: # These secrets are key encrypted and safe to push to github for running pipecd but still it is a better practice to keep the repo private
+      DOCKER_CONFIG_JSON: ""
+    decryptionTargets:
+      - ../../apps/portfolio/secret.yaml
+  description: |
+    This is my self hosted portfolio.
+
+

@@ -1,0 +1,17 @@
+## portfolio service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-portfolio
+  namespace: apps
+  labels:
+    source: self-project
+    app: portfolio
+spec:
+  selector:
+    app: portfolio
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80 # defaults to port
