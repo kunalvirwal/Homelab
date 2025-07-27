@@ -19,7 +19,7 @@ spec:
         app: portfolio
     spec:
       imagePullSecrets:
-        - name: secret-dockerhub/portfolio
+        - name: secret-dockerhub-portfolio
       containers:
         - name: portfolio
           image: docker.io/kunalvirwal/portfolio:latest
