@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: fastchat
-          image: docker.io/kunalvirwal/portfolio:v12
+          image: docker.io/kunalvirwal/portfolio:v13
           imagePullPolicy: Always
           ports:
             - containerPort: 80
