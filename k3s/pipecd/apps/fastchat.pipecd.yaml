@@ -8,6 +8,9 @@ spec:
       - ../../apps/fastchat/service.yaml
       - ../../apps/fastchat/ingress.yaml
     kubectlVersion: 1.32.5
+  trigger:
+    onOutOfSync:
+      disabled: false
   encryption:
     encryptedSecrets: # These secrets are key encrypted and safe to push to github for running pipecd but still it is a better practice to keep the repo private
       SECRET_KEY: AgAkCSw0Fy4pTK20/fDmgN4MN9yLZCIiMaWtPjQxvptkqTjbzGS18lsDWDH1q/yzYt3Ntvz2qxYVrYaGWRMJZQjiEXddLXRN/Tx76QyAcxF+7Vhbg18PDc0Tk9qO4xInwslhYs7Tm3gK6eBB3vMIlFrhR7MnrHvlPLhgHAlp/b/6PPSoA4qRSDYquX8G+FhFVTknrbVj+895sohsZBosOSLR/9RzHtMs+6xDNSsl251eJGmkxrSmQMXWsiiB/Y8XpJu2uA8MiOIC5cLVBGy7bE1Xai0Pz7mI3apOFKQy2RslUFjuxCnteTP+mEnGq7Owzu5nKeZrvaHQtEAP5tfRf5QkzMLtZUX6o6BpG1fge3wSeWvCDbtiktxIWfdVB/7acZPMieVkZCrMKx/85zNiU1toXbewCGjMpgfdLoc4ObK56l2LNAiX8EJri27x0BkAowaofg8g/46QA2TwAQdQYYUxqiuBSpGIQPxhdiUuKVt1ClgnSsoe1Kc/5nMfeEd5UbPMdgLETPdYMai3ld8OQByfLD8fKLDyfp13s5LIj8hkJrkZgYI50AXMdZtTfeUOp9IetZRvZHqsz2J/QK15TjVn+Sfa2+cTHvrC/0dVwJxTUmmHK1O/YLVHFY33j/JTz93k9ayKwoipphODx8/9wBGdU6Uhnu8UG9f8TPowb0lDs3KqCtzpa/55TFx7uK+Io5cq/W6J+9KHVqU=
