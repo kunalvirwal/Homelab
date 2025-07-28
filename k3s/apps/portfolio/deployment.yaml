@@ -1,5 +1,4 @@
 ## portfolio deployment
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -22,7 +21,7 @@ spec:
         - name: secret-dockerhub-portfolio
       containers:
         - name: portfolio
-          image: docker.io/kunalvirwal/portfolio:latest
+          image: docker.io/kunalvirwal/portfolio:v12
           imagePullPolicy: Always
           ports:
             - containerPort: 80
