@@ -22,7 +22,7 @@ spec:
         - name: secret-dockerhub-portfolio
       containers:
         - name: portfolio
-          image: docker.io/kunalvirwal/portfolio:v13
+          image: docker.io/kunalvirwal/portfolio:v14
           imagePullPolicy: Always
           ports:
             - containerPort: 80
