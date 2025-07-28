@@ -41,7 +41,7 @@ node {
             // This command will always return a non zero error code
             def previousBuildNo = env.BUILD_NUMBER.toInteger() - 1
             sh """
-                docker rmi registry.hub.docker.com/<dockerhub-id>/<image-name>:v${previous} || true 
+                docker rmi registry.hub.docker.com/<dockerhub-id>/<image-name>:v${previousBuildNo} || true 
             """
         }
         slackSend(
