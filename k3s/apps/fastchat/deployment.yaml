@@ -21,6 +21,7 @@ spec:
       containers:
         - name: fastchat
           image: docker.io/kunalvirwal/fastchat:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           env:
