@@ -4,13 +4,19 @@
 services:
   app:
     image: jenkins/jenkins
+    container_name: jenkins
     restart: on-failure
+    environment:
+      - TZ=Asia/Kolkata
     ports:
       - 9090:8080
       - 50000:50000
     volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
       - /home/kunal/Desktop/jenkins:/var/jenkins_home/
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/bin/docker
+      - /usr/local/bin/pipectl:/usr/local/bin/pipectl
     group_add:
-      - "999" # Add user to docker group to access the docker socket
+      - "999" # docker GID, so as to give access to the container
