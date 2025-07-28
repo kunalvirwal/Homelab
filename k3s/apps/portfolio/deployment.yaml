@@ -18,12 +18,12 @@ spec:
       labels:
         app: portfolio
     spec:
-      imagePullPolicy: Always
       imagePullSecrets:
         - name: secret-dockerhub-portfolio
       containers:
         - name: portfolio
           image: docker.io/kunalvirwal/portfolio:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
               name: http
