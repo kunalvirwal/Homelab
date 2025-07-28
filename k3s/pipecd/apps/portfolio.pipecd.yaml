@@ -2,6 +2,15 @@ apiVersion: pipecd.dev/v1beta1
 kind: KubernetesApp
 spec:
   name: portfolio
+  eventWatcher:
+    - matcher:
+        name: portfolio-image-update
+      handler:
+        type: GIT_UPDATE
+        config:
+          replacements:
+            - file: ../../apps/portfolio/deployment.yaml
+              yamlField: $.spec.template.spec.containers[0].image
   input:
     manifests:
       - ../../apps/portfolio/secret.yaml
