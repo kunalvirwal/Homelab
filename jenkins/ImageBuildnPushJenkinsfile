@@ -49,6 +49,13 @@ node {
             message: "${env.JOB_NAME} #${env.BUILD_NUMBER}\nJob successfull!!: Pushed image to DockerHub and notified PipeCD. cc <@slack-id>"
         )
     } catch (e) {
+        stage('Remove dangling images and failed exited containers') {
+            sh """
+                docker rmi -f \$(docker images -f "dangling=true" -q) || true
+                docker rm -f \$(docker ps -a -f status=exited -q) || true
+            """
+        }
+        currentBuild.result = 'FAILURE'
         slackSend(
             color: 'danger',
             message: "${env.JOB_NAME} #${env.BUILD_NUMBER}\nBuild failed!? with the error: ${e} <@slack-id>"
