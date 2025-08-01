@@ -32,7 +32,7 @@ node {
                     --address=${env.PIPECD_API_ADDRESS} \
                     --api-key=${env.PIPECD_API_KEY} \
                     --name=<application>-image-update \
-                    --data="docker.io/kunalvirwal/portfolio:v${env.BUILD_NUMBER}"
+                    --data="docker.io/<dockerhub-id>/<image-name>:v${env.BUILD_NUMBER}"
                 """
             }
         }
