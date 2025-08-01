@@ -51,7 +51,7 @@ node {
     } catch (e) {
         slackSend(
             color: 'danger',
-            message: "${env.JOB_NAME} #${env.BUILD_NUMBER}\nBuild failed!? with the error: ${e} <@kunalvirwal>"
+            message: "${env.JOB_NAME} #${env.BUILD_NUMBER}\nBuild failed!? with the error: ${e} <@slack-id>"
         )
     }
 }
