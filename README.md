@@ -25,7 +25,13 @@ This diagram is a representation of all the services that are running in my Home
 ## Self-Hosted services
 
 In my Homelab I have deployed various services directly using docker containers, which I use in my day to day life. All the docker composes used to deploy these services are present in this repo.  
-The services start with my monitoring stack, which includes a compose of `Prometheus`, `Grafana`, `Node-Exporter` and `cAdvisor` for my master node and a smaller version of the same just having Node-Exporter and cAdvisor on the other worker nodes. 
+
+<p align=center>
+<img src="./miscellaneous/README_ASSETS/Gatus.png" style="border: 2px solid #000; padding: 4px; border-radius: 4px;">
+<strong>Gatus</strong>
+</p>
+
+The services start with my monitoring stack, which includes `Gatus` for uptime monitoring of sites and a compose of `Prometheus`, `Grafana`, `Node-Exporter` and `cAdvisor` for my master node and a smaller version of the same just having Node-Exporter and cAdvisor on the other worker nodes. 
 Throughout this guide whenever I mention master node, it refers to my on-premise server. Any other nodes whether worker or remote refer to cloud instances such as DigitalOcean Droplets.
 
 <p align=center>

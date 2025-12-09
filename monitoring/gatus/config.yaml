@@ -1,0 +1,110 @@
+security:
+  basic:
+    username: "<username>"
+    password-bcrypt-base64: "<password-bycrypted-base64-encrypted>"
+
+concurrency: 5
+
+storage:
+  type: sqlite
+  path: /data/data.db
+  retention: 7d
+
+
+alerting:
+  slack:
+    webhook-url: "<slack-webhook>"
+    default-alert:
+      enabled: true
+      # global apply
+      failure-threshold: 5
+      success-threshold: 1
+      send-on-resolved: true
+
+connectivity:
+  checker:
+    target: 8.8.8.8:53
+    interval: 60s
+
+endpoints:
+  - name: Portfolio Site
+    enabled: true
+    group: prod
+    url: "https://kunalvirwal.tech"
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: slack
+
+  - name: Feedback-Frontend
+    enabled: true
+    group: prod
+    url: "https://feedback.kunalvirwal.tech"
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: slack
+
+  - name: Feedback-Backend
+    enabled: true
+    group: prod
+    url: "https://feedback.kunalvirwal.tech/api/health"
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: slack
+
+  - name: Grafana
+    enabled: true
+    group: monitoring
+    url: "http://<grafana-url>/api/health"
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: slack
+
+  - name: Prometheus
+    enabled: true
+    group: monitoring
+    url: "http://<prometheus-url>/-/ready"
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: slack
+
+  - name: Jenkins
+    enabled: true
+    group: CI/CD
+    url: "http://<jenkins-url>/health/"
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: slack
+
+  - name: Nextcloud
+    enabled: true
+    group: Apps
+    url: "http://<nextcloud-url>/status.php/" # Note: Here if you use an IP instead of domain then add that as a configured domain to your nextcloud
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: slack
+
+  - name: Linkding
+    enabled: true
+    group: Apps
+    url: "http://<linkding-url>/health"
+    interval: 1m
+    headers:
+      Host: "linkding.kunalvirwal.tech"
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: slack
