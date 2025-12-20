@@ -1,3 +1,6 @@
+# Gatus is not a part of the monitoring compose because it has to access the monitoring sites using the public URLs
+# So it can monitor their accessaibility also.
+
 version: "1"
 
 services:
